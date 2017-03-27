@@ -24,6 +24,7 @@ easierdat<-function(x,frame){
 
 #Noticed it get rid of 382 rows with NAs
 dat<-easierdat(dat$OFFENSES,dat)
+sort(table(dat$ShortCode),decreasing = T)
 
 #Focusing on the top-ten offenses based on both short and long codes.
 sort(table(dat$ShortCode),decreasing = T)[1:10]
@@ -67,7 +68,7 @@ table(dat$FullCode[dat$ShortCode=="15"])
 
 #We will only focus on incidents coded based on Title 18 as "27","13(a)","9","39","55","51","35"
 minidat<-filter(dat,ShortCode=="27"|ShortCode=="13(a)"|ShortCode=="9"|ShortCode=="39"
-       |ShortCode=="55"|ShortCode=="51"|ShortCode=="35")
-table(minidat$ShortCode)
+       |ShortCode=="55")
+
 
 
