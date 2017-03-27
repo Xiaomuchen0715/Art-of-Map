@@ -71,3 +71,7 @@ map<-leaflet() %>%
   
 map
 
+install.packages("geojsonio")
+library(geojsonio)
+nycounties <- geojsonio::geojson_read("json/nycounties.geojson",
+                                      what = "sp")
