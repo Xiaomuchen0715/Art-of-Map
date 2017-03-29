@@ -8,10 +8,9 @@ table(year(minidat$ARRESTTIME))
 #3 2347  380
 # We ignore the arrest happends during 2014
 data_a1<-select(minidat,Lon=X,Lat=Y,Date=ARRESTTIME)
-date<-data_a1$Date
-date<-date[year(date)>2015]
-date<-as.Date(date)
-qplot(as.character(date))+geom_bar()
+date<-mday(data_a1$Date)
+data_a1$Date<-mday(data_a1$Date)
+mday(date)
 
 data_a1<-filter(data_a1,year(date)>2015)
 data_a1$Date<-as.Date(data_a1$Date)
