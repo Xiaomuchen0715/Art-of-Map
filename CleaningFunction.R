@@ -90,10 +90,9 @@ g1
 #"35" represents chapter 35 of Title 18 with the title "Burglary and Other Criminal Intrusion"
 #"37" represents chapter 37 of Title 18 with the title "Robbery"(but with exceptions from other chapters)
 #"49" represents chapter 49 of Title 18 with the title "Falsification and Intimidation"
-#"38" represents chapter 38 of Title 18 with the title "Falsification and Intimidation"
 #"61" represents chapter 61 of Title 18 with the title "Firearms and Other Dangerous Articles"
 #"43" represents chapter 43 of Title 18 with the title "Offenses Against the Family"
-#"59" represents chapter 59 of Title 18 with the title Public Indecency"
+#"59" represents chapter 59 of Title 18 with the title "Public Indecency"
 #The rest of the top ten are not listed in Title 18.
 
 table(dat$FullCode[dat$ShortCode=="95"])
@@ -158,6 +157,6 @@ table(dat$FullCode[dat$ShortCode=="13"])
 #"51","35","37","49","38","61","43","59"
 minidat<-filter(dat,ShortCode=="27"|ShortCode=="13(a)"|ShortCode=="9"|ShortCode=="39"
        |ShortCode=="55"|ShortCode=="51"|ShortCode=="35"|ShortCode=="37"|
-         ShortCode=="49"|ShortCode=="38"|ShortCode=="61"|ShortCode=="43"|ShortCode=="59")
+         ShortCode=="49"|ShortCode=="61"|ShortCode=="43"|ShortCode=="59")
 
 
