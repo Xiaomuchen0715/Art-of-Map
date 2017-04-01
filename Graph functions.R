@@ -41,6 +41,20 @@ mutate(content = paste("<b>Type of offense:</b>", "<b><font color=darkyellow>",m
                          "Gender:", minidat$GENDER, "<br>",
                          "Arrested at", minidat$ARRESTLOCATION, "at",minidat$ARRESTTIME))
 #map
+#The color system we use 
+#Types
+#Assult: Red
+#13(a): Blue
+#9: Orange
+#39: Purple
+
+#Race
+#White:"White"
+#Black:"Black"
+#Other:"Gray"
+
+#Age
+table()
 
 #set the color for different offense type
 pal <- colorFactor(c("yellow","gray","red","green","orange","pink",
