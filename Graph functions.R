@@ -46,48 +46,6 @@ label<-function(frames){
 
 minidata<-label(minidata)
 
-
-#map
-#The color system we use 
-#Types
-#Assult: Red
-#13(a): Blue
-#9: Orange
-#39: Purple
-
-#Race
-#White:"White"
-#Black:"Black"
-#Other:"Gray"
-
-#Age
-#lasttime check the logitude and latitude
-plot(minidata$X,minidata$Y)
-#clearly somethingwrong about the locations with 0 latitude and 0 logitude
-#we find the reason is the address is without housenumber 
-#But actually we could approximately identity the address
-location<-minidata$INCIDENTLOCATION[minidata$X==0]
-location<-gsub(" ","+",location)
-location<-gsub(",","",location)
-
-latitude<-NULL
-longitude<-NULL
-raw.data<-NULL
-geodat<-NULL
-for (address in location){
-  # Connecting to the Google Maps to return coordinates given a location name
-  root <- "https://maps.googleapis.com/maps/api/geocode/json?"
-  url <- paste0(root,"address=",address,"+CA&key=AIzaSyAvui-obPU4xD8SslouCsDFoFtM-86ScCw")
-  raw.data <- readLines(url)
-  geodat <- fromJSON(raw.data)
-  print(geodat$results$geometry$location$lat[1])
-  ifelse(typeof(geodat$results$geometry$location$lat[1])=="NULL",latitude <- c(latitude,"NA"),latitude <- c(latitude,geodat$results$geometry$location$lat[1]))
-  ifelse(typeof(geodat$results$geometry$location$lng[1])=="NULL",longitude <- c(longitude,"NA"),longitude <- c(longitude,geodat$results$geometry$location$lng[1]))
-}
-raw.data
-
-table(emplocation)
-emplocation[1:10]
 #set the color for different offense type
 pal <- colorFactor(c("red","blue","orange","purple","turquoise","magenta",
                      "gray","green","violet","brown","white","pink"),
