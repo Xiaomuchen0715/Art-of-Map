@@ -100,6 +100,7 @@ xy<-locationClean(minidata,minidata$X[minidata$X==0],
 nrow(minidata)
 #4982
 
+#fit the latitude and longitude in empty part
 together<-function(frames,xy){
   frames<-filter(frames,!X==0) 
   set<-filter(minidata,X==0)
@@ -126,12 +127,12 @@ arrestlocation<-function(locations){
     url <- paste0(root,"address=",address,"+CA&key=AIzaSyAvui-obPU4xD8SslouCsDFoFtM-86ScCw")
     raw.data <- readLines(url)
     geodat <- fromJSON(raw.data)
-    latitude<-c(latitude,leodat$results$geometry$location$lat[1])
+    latitude<-c(latitude,geodat$results$geometry$location$lat[1])
     longitude<-c(longitude,geodat$results$geometry$location$lng[1])
     ArrstXY<-data.frame(latitude,longitude)
   }
   return(ArrstXY)
 }
-
-arrestLocation(minidata)
+#But R is too slow for this 
+ArrestLocation<-arrestlocation(minidata)
   
