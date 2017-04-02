@@ -26,6 +26,15 @@ label<-function(frames){
   frames$ShortCode[frames$ShortCode=="61"]<-"Firearms and Other Dangerous Articles"
   frames$ShortCode[frames$ShortCode=="43"]<-"Offenses Against the Family"
   frames$ShortCode[frames$ShortCode=="31"]<-"Sexual Offenses"
+  frames$GENDER[frames$GENDER=="F"]<-"Female"
+  frames$GENDER[frames$GENDER=="M"]<-"Male"
+  frames$GENDER[frames$GENDER=="M"]<-"Male"
+  frames$RACE[frames$RACE=="A"]<-"Asian"
+  frames$RACE[frames$RACE=="B"]<-"African America"
+  frames$RACE[frames$RACE=="H"]<-"Hispanic"
+  frames$RACE[frames$RACE=="O"]<-"Other"
+  frames$RACE[frames$RACE=="U"]<-"Unknow"
+  frames$RACE[frames$RACE=="W"]<-"White"
   frames<-frames%>%
     mutate(Weekday=wday(frames$ARRESTTIME,label = TRUE, abbr = FALSE))%>%
     mutate(Hours=hour(frames$ARRESTTIME))%>%

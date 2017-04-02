@@ -19,7 +19,6 @@ table(minidata$Zipcode)
 
 #17 of the location without exact zipcode
 minidata$INCIDENTLOCATION[minidata$Zipcode=="PA"]
-
 #I add them by myself
 minidata$Zipcode[minidata$INCIDENTLOCATION==
                    "800 Block RECTENWALD ST PITTSBURGH, PA"]<-"PA 15210"
@@ -57,20 +56,33 @@ for(i in c){
   a<-c(a,rep(i,i))
 }
 minidata$ZipCount<-as.numeric(a)
+table(minidata$ZipCount)
+
+#use neighborhood to estimate crime rate
+b<-(tapply(minidata$INCIDENTNEIGHBORHOOD,sort(minidata$INCIDENTNEIGHBORHOOD),length))
+minidata<-minidata[order(minidata$INCIDENTNEIGHBORHOOD),]
+e<-NULL
+for(i in b){
+  e<-c(e,rep(i,i))
+}
+minidata$NeighborCount<-as.numeric(e)
+hist(minidata$NeighborCount)
+
+
 
 #set the color for different offense type
 legendname<-c("Assult",
-              "Possessing Controlled Substance",
-              "Inchoate Crimes",
-              "Theft",
-              "Riot and Related Offenses",
-              "Arson, Criminal Mischef And Other Property Destructions",
-              "Burglary",
-              "Falsification and Intimidation",
-              "Robbery",
-              "Firearms and Other Dangerous Articles",
-              "Offenses Against the Family",
-              "Sexual Offenses")
+               "Possessing Controlled Substance",
+               "Inchoate Crimes",
+               "Theft",
+               "Riot and Related Offenses",
+               "Arson, Criminal Mischef And Other Property Destructions",
+               "Burglary",
+               "Falsification and Intimidation",
+               "Robbery",
+               "Firearms and Other Dangerous Articles",
+               "Offenses Against the Family",
+               "Sexual Offenses")
 
 pal <- colorFactor(c("red","blue","orange","purple","turquoise","magenta",
                      "gray","green","violet","brown","white","pink"),
@@ -87,57 +99,82 @@ pal <- colorFactor(c("red","blue","orange","purple","turquoise","magenta",
                               "Offenses Against the Family",
                               "Sexual Offenses"))
 
+pal2 <- colorFactor(c("green","black","orange","yellow","turquoise","magenta"),
+                   domain = c("White","African America","Hispanic","Asian","Other","Unknow"))
+
+pal3 <-colorFactor(c("red","blue","yellow"),
+                  domain = c("Female","Male","Unknow"))
 
 #add widgets to the map
-ui <- dashboardPage( dashboardHeader(title = p("Crimes and Offenses in City of Pittsburgh"), titleWidth = 400),
-                    sidebar = dashboardSidebar(disable = T),
-                    dashboardBody(
-                      fluidRow(
-                        dashboard<-column(width =4,
-                               # width set to NULL when use column-based layout
-                               box(width = NULL , title =tagList(shiny::icon("filter",class = 'fa-lg'), "Filter Data") ,
-                                   solidHeader = T, collapsible = T, status = 'primary',
-                                   # create a select-input widget for crime type selection
-                                   selectizeInput('crimeType', 
-                                               label = "Crime and Offense Types",width = 300,
-                                               choices = list("Assult",
-                                                              "Possessing Controlled Substance",
-                                                              "Inchoate Crimes",
-                                                              "Theft",
-                                                              "Riot and Related Offenses",
-                                                              "Arson, Criminal Mischef And Other Property Destructions",
-                                                              "Burglary",
-                                                              "Falsification and Intimidation",
-                                                              "Robbery",
-                                                              "Firearms and Other Dangerous Articles",
-                                                              "Offenses Against the Family",
-                                                              "Sexual Offenses"),
-                                               selected = c("Possessing Controlled Substance"),
-                                               multiple = T),
-                                                 
-                                   # create a date-range-input widget
-                                   dateRangeInput('dates', label = "Date Range",width = 300,
-                                                  start = '2016-01-01', end = '2017-03-31',
-                                                  min = "2016-01-01", max = "2017-03-31"
-                                   ),
-                                   # create a select-input widget for day of week selection
-                                   selectizeInput('day_of_week','Days of Week', width = 300,
-                                                  choices = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
-                                                  selected = c('Monday'),
-                                                  multiple = T),
-                                   # create a slder-input widget for time of day selection
-                                   sliderInput('time_of_day','Time of Day', min = 0, max = 23,width = 300,
-                                               value = c(0,23), step = 1),
-                                   # create a submit-button for user explicitly confirm data input
-                                   submitButton(text = "Submit",icon =icon('filter'))
-                               )
-                        )
-                        , map <- column(width =8,
-                                        box(width = NULL, solidHeader = TRUE,
-                                            leafletOutput('crimeMap',height = 500)))
-                      )
-                    ))
+header <- dashboardHeader(title = p("Crime and Offenses of Pittsburgh"), titleWidth = 400)
+dashboard <- column(width =4,
+                    # width set to NULL when use column-based layout
+                    box(width = NULL , title =tagList(shiny::icon("filter",class = 'fa-lg'), "Filter Data") ,
+                        solidHeader = T, collapsible = T, status = 'primary',
+                        # create a select-input widget for crime type selection
+                        selectizeInput('crimeType', 
+                                       label = "Crime and Offense Types",width = 300,
+                                       choices = list("Assult",
+                                                      "Possessing Controlled Substance",
+                                                      "Inchoate Crimes",
+                                                      "Theft",
+                                                      "Riot and Related Offenses",
+                                                      "Arson, Criminal Mischef And Other Property Destructions",
+                                                      "Burglary",
+                                                      "Falsification and Intimidation",
+                                                      "Robbery",
+                                                      "Firearms and Other Dangerous Articles",
+                                                      "Offenses Against the Family",
+                                                      "Sexual Offenses"),
+                                       selected = c("Assult",
+                                                    "Possessing Controlled Substance",
+                                                    "Inchoate Crimes",
+                                                    "Theft"),
+                                       multiple = T),
+                        
+                        # create a date-range-input widget
+                        dateRangeInput('dates', label = "Date Range",width = 300,
+                                       start = '2016-01-01', end = '2017-03-31',
+                                       min = "2016-01-01", max = "2017-03-31"
+                        ),
+                        # create a select-input widget for day of week selection
+                        selectizeInput('day_of_week','Days of Week', width = 300,
+                                       choices = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
+                                       selected = c('Monday'),
+                                       multiple = T),
+                        # create a slder-input widget for time of day selection
+                        sliderInput('time_of_day','Time of Day', min = 0, max = 23,width = 300,
+                                    value = c(0,23), step = 1),
+                        #create a selet-input for gender
+                        selectizeInput('gender','Gender', width = 300,
+                                       choices = c('Male','Female','Unknow'),
+                                       selected = c('Male'),
+                                       multiple = T),
+                        sliderInput('age', label = "Criminal Age",min=1,max=120,width = 300,
+                                    value =c(0,1999) ,step=1),
+                        selectizeInput('race','Race', width = 300,
+                                       choices = c('African America','White','Other','Hispanic',
+                                                   'Asian','Unknow'),
+                                       selected = c('African America','White'),
+                                       multiple = T),
+                        # create a submit-button for user explicitly confirm data input
+                        submitButton(text = "Submit",icon =icon('filter'))
+                    )
+)
 
+map <- column(width =8,
+              box(width = NULL, solidHeader = TRUE,
+                  leafletOutput('crimeMap',height = 500)))
+
+body <- dashboardBody(
+  fluidRow(
+    dashboard, map
+  )
+)
+  
+ui <- dashboardPage(header,
+                       sidebar = dashboardSidebar(disable = T),
+                       body)
 
 server <- function(input, output) {
   # Create a reactive expression to filter data set per user requests
@@ -146,28 +183,53 @@ server <- function(input, output) {
       filter(ShortCode %in% input$crimeType ) %>%
       filter(Date > input$dates[1] & Date < input$dates[2]) %>%
       filter(Weekday %in% input$day_of_week) %>%
-      filter(Hours >= input$time_of_day[1] & Hours <= input$time_of_day[2])
+      filter(Hours >= input$time_of_day[1] & Hours <= input$time_of_day[2])%>%
+     filter(GENDER %in% input$gender)%>%
+    filter(AGE >= input$age[1] & AGE <=input$age[2]) %>%
+    filter(RACE %in% input$race)
   })
   # Use Leaflet to render crime map
   output$crimeMap <- renderLeaflet({
     leaflet(filteredData()) %>%
-      addProviderTiles(providers$CartoDB.Positron) %>%
+      addProviderTiles(providers$CartoDB.Positron,group="Base Map") %>%
       addCircleMarkers(
         ~X,
         ~Y,
-        radius = ZipCount,
+        radius = ~NeighborCount/30,
         color = ~pal(ShortCode),
         stroke = FALSE, fillOpacity = 0.5,
-        popup = ~content)%>%
+        popup = ~content,group="By Offense Type")%>%
+      addCircleMarkers(
+        ~X,
+        ~Y,
+        radius = ~NeighborCount/30,
+        color = ~pal2(RACE),
+        stroke = FALSE, fillOpacity = 0.5,
+        popup = ~content,group="By Criminal Race")%>%
+      addCircleMarkers(
+        ~X,
+        ~Y,
+        radius = ~NeighborCount/30,
+        color = ~pal3(GENDER),
+        stroke = FALSE, fillOpacity = 0.5,
+        popup = ~content,group="By Criminal Gender")%>%
+      addLayersControl(
+        baseGroups = c("Base Map"),
+        overlayGroups = c("By Offense Type", "By Criminal Race",
+                          "By Criminal Gender"),
+        options = layersControlOptions(collapsed = F)
+      )%>%
         addLegend(position = "bottomright",
-                              pal = pal,values = legendname
-          )
-      
+                              pal = pal,values = ~ShortCode
+          )%>%
+      addLegend(position = "bottomright",
+                pal = pal2,values = ~RACE
+      )%>%
+      addLegend(position = "bottomright",
+                pal = pal3,values = ~GENDER)
   })
 }
 
+
 shinyApp(ui,server)
-
-
-
 
