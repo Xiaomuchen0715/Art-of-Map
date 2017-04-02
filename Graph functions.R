@@ -12,41 +12,21 @@ library(shiny)
 library(lubridate)
 library(shinydashboard)
 library(jsonlite)
-#funtion for label
-label<-function(frames){
-  frames$ShortCode[frames$ShortCode=="27"]<-"Assult"
-  frames$ShortCode[frames$ShortCode=="13(a)"]<-"Possessing Controlled Substance"
-  frames$ShortCode[frames$ShortCode=="9"]<-"Inchoate Crimes"
-  frames$ShortCode[frames$ShortCode=="39"]<-"Theft"
-  frames$ShortCode[frames$ShortCode=="55"]<-"Riot and Related Offenses"
-  frames$ShortCode[frames$ShortCode=="33"]<-"Arson, Criminal Mischef And Other Property Destructions"
-  frames$ShortCode[frames$ShortCode=="35"]<-"Burglary"
-  frames$ShortCode[frames$ShortCode=="49"]<-"Falsification and Intimidation"
-  frames$ShortCode[frames$ShortCode=="37"]<-"Robbery"
-  frames$ShortCode[frames$ShortCode=="61"]<-"Firearms and Other Dangerous Articles"
-  frames$ShortCode[frames$ShortCode=="43"]<-"Offenses Against the Family"
-  frames$ShortCode[frames$ShortCode=="31"]<-"Sexual Offenses"
-  frames<-frames%>%
-    mutate(Weekday=wday(frames$ARRESTTIME,label = TRUE, abbr = FALSE))%>%
-    mutate(Hours=hour(frames$ARRESTTIME))%>%
-    mutate(Date=as.Date(frames$ARRESTTIME))%>%
-    mutate(incidentType=as.factor(frames$ShortCode))%>%
-    mutate(content = paste("<b>Type of offense:</b>", "<b><font color=darkyellow>",frames$ShortCode, "</b></font><br>",
-                            "<b>Incident Location:</b>","<br>", 
-                            "Adress:", frames$INCIDENTLOCATION,"<br>",
-                            "Neighborhood:", frames$INCIDENTNEIGHBORHOOD, "<br>",
-                            "<b>Suspect Profile:</b>", "<br",
-                            "Race:", frames$RACE, "<br>",
-                            "Race:", frames$RACE, "<br>",
-                            "Gender:", frames$GENDER, "<br>",
-                            "Arrested at", frames$ARRESTLOCATION, "at",frames$ARRESTTIME))
-  
-  return(frames)
-}
-
-minidata<-label(minidata)
 
 #set the color for different offense type
+
+legendname<-c("Assult",
+              "Possessing Controlled Substance",
+              "Inchoate Crimes",
+              "Theft",
+              "Riot and Related Offenses",
+              "Arson, Criminal Mischef And Other Property Destructions",
+              "Burglary",
+              "Falsification and Intimidation",
+              "Robbery",
+              "Firearms and Other Dangerous Articles",
+              "Offenses Against the Family",
+              "Sexual Offenses")
 pal <- colorFactor(c("red","blue","orange","purple","turquoise","magenta",
                      "gray","green","violet","brown","white","pink"),
                    domain = c("Assult",
@@ -132,7 +112,18 @@ server <- function(input, output) {
         radius = 6,
         color = ~pal(ShortCode),
         stroke = FALSE, fillOpacity = 0.5,
-        popup = ~content
+        popup = ~content)%>%
+       observe({
+        proxy <- leafletProxy("map", data = quakes)
+        
+        # Remove any existing legend, and only if the legend is
+        # enabled, create a new one.
+        proxy %>% clearControls()
+        if (input$legend) {
+          pal <- colorpal()
+          proxy %>% addLegend(position = "bottomright",
+                              pal = pal, values = ~mag
+          )
       )
   })
 }
