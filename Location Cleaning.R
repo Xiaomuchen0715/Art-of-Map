@@ -61,13 +61,15 @@ minidata<-label(minidata)
 #Other:"Gray"
 
 #Age
-#lasttime check the logitude and latitude
+#check the logitude and latitude
 plot(minidata$X,minidata$Y)
 table(minidata$X[minidata$X==0])
+
 table(minidata$X[minidata$Y==0])
 #clearly somethingwrong about the locations with 0 latitude and 0 logitude
 #we find the reason is the address is without housenumber 
-#But actually we could approximately identity the address
+#We try to  identity latitude and logitide through  address
+
 locationClean<-function(emtylocations,x,y){
   emtylocations<-filter(emtylocations,X==0)
   locations<-emtylocations$INCIDENTLOCATION
@@ -94,27 +96,8 @@ locationClean<-function(emtylocations,x,y){
   return(xy)
 }
 
-xy<-locationClean(minidata,minidata$X[minidata$X==0],
-                        minidata$Y[minidata$Y==0])
-
-nrow(minidata)
-#4982
-
-#fit the latitude and longitude in empty part
-together<-function(frames,xy){
-  frames<-filter(frames,!X==0) 
-  set<-filter(minidata,X==0)
-  set$X<-xy$x
-  set$Y<-xy$y
-  frames<-rbind(frames,set)
-  frames<-filter(frames,!X==0)
-  return(frames)
-}
-minidata<-together(minidata,xy)
-
-#check the result 
-plot(minidata$X,minidata$Y)
-#Still many incidents with wrong locations
+#However without street number the result from this API function is not accurate
+#we decide to filter location based on the longitude and latitude of pittsburgh
 minidata<-filter(minidata,X>-80.1&X< -79.5&Y<41&Y>40.3)
 plot(minidata$X,minidata$Y)
 
