@@ -112,27 +112,10 @@ together<-function(frames,xy){
 }
 minidata<-together(minidata,xy)
 
+#check the result 
+plot(minidata$X,minidata$Y)
+#Still many incidents with wrong locations
+minidata<-filter(minidata,X>-80.1&X< -79.5&Y<41&Y>40.3)
+plot(minidata$X,minidata$Y)
 
-arrestlocation<-function(locations){
-  locations<-locations$ARRESTLOCATION
-  locations<-gsub(" ","+",locations)
-  locations<-gsub(",","",locations)
-  latitude<-NULL
-  longitude<-NULL
-  raw.data<-NULL
-  geodat<-NULL
-  for (address in locations){
-    # Connecting to the Google Maps to return coordinates given a location name
-    root <- "https://maps.googleapis.com/maps/api/geocode/json?"
-    url <- paste0(root,"address=",address,"+CA&key=AIzaSyAvui-obPU4xD8SslouCsDFoFtM-86ScCw")
-    raw.data <- readLines(url)
-    geodat <- fromJSON(raw.data)
-    latitude<-c(latitude,geodat$results$geometry$location$lat[1])
-    longitude<-c(longitude,geodat$results$geometry$location$lng[1])
-    ArrstXY<-data.frame(latitude,longitude)
-  }
-  return(ArrstXY)
-}
-#But R is too slow for this 
-ArrestLocation<-arrestlocation(minidata)
-  
+
