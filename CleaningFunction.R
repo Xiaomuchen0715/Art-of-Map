@@ -40,7 +40,7 @@ easierdat<-function(x,frame){
 }
 
 easydat<-easierdat(dat$OFFENSES,dat)
-nrow(ArrestData)-nrow(dat)
+nrow(ArrestData)-nrow(easydat)
 #Noticed it only get rid of 6 rows 
 #The dat is now with NAs and with wired ages.
 #Becasue we need to count the frequency of different types of crimes
@@ -66,19 +66,11 @@ easierierdat<-function(frames){
   minidat<-filter(minidat,!is.na(X)|!is.na(Y))
   return(minidat)
 }
+
 minidata<-easierierdat(easydat)
 
 #--------------------------------detail of second data clean function 
 #The distribution of different types of offenses
-g1<-ggplot(easydat, aes(x=reorder(ShortCode, -table(ShortCode)[ShortCode]),fill=GENDER))+
-  ggtitle("Offenses by Different Codes")+xlab("Offense Types")+
-  geom_bar(width=.5)
-g1
-#From g1, we could see the distribution is extremely skewed with evident outliers.
-#We need to get rid of outliers and get gid of samples with less explantionary power
-
-#reorder datafrane according to frequencies of offense types
-sdat<-easydat[order(-table(easydat$ShortCode)[easydat$ShortCode]),]
 
 #get the outliers when treating different types as numbers
 sdat$Count<-as.numeric(reorder(sdat$ShortCode, -ave(as.numeric(sdat$ShortCode), sdat$ShortCode, FUN = length)))
