@@ -13,8 +13,52 @@ library(lubridate)
 library(shinydashboard)
 library(jsonlite)
 
-#set the color for different offense type
+#use ZIP Code to estimate crime rate
+minidata$Zipcode<-sub('.*,\\s*','', minidata$INCIDENTLOCATION)
+table(minidata$Zipcode)
 
+#17 of the location without exact zipcode
+minidata$INCIDENTLOCATION[minidata$Zipcode=="PA"]
+
+#I add them by myself
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "800 Block RECTENWALD ST PITTSBURGH, PA"]<-"PA 15210"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "1100 Block N MURTLAND ST PITTSBURGH, PA"]<-"PA 15208"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "E Liberty BL & Centre AV Pittsburgh, PA"]<-"PA 15206"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "200 Block Forbes AV Pittsburgh, PA"]<-"PA 15213"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "Wyndotte ST & Deraud ST Pittsburgh, PA"]<-"PA 15219"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "300 Block Mt Pleasant RD Pittsburgh, PA"]<-"PA 15214"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "2300 Block Noblestown RD Pittsburgh, PA"]<-"PA 15205"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "3800 Block PERRYSVILLE AV PITTSBURGH, PA"]<-"PA 15205"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "Berry ST & Charlton ST Pittsburgh, PA"]<-"PA 15205"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "500 Block GREENFIELD AV PITTSBURGH, PA"]<-"PA 15207"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "Crafton BL & Ridenour AV Pittsburgh, PA"]<-"PA 15205"
+minidata$Zipcode[minidata$INCIDENTLOCATION==
+                   "800 Block Freeport RD Pittsburgh, PA"]<-"PA 15238"
+#check it
+table(minidata$Zipcode)
+minidata<-filter(minidata,!Zipcode=="PA 12508")
+table(minidata$Zipcode)
+
+c<-(tapply(minidata$Zipcode,sort(minidata$Zipcode),length))
+minidata<-minidata[order(minidata$Zipcode),]
+a<-NULL
+for(i in c){
+  a<-c(a,rep(i,i))
+}
+minidata$ZipCount<-as.numeric(a)
+
+#set the color for different offense type
 legendname<-c("Assult",
               "Possessing Controlled Substance",
               "Inchoate Crimes",
@@ -111,7 +155,7 @@ server <- function(input, output) {
       addCircleMarkers(
         ~X,
         ~Y,
-        radius = 6,
+        radius = ZipCount,
         color = ~pal(ShortCode),
         stroke = FALSE, fillOpacity = 0.5,
         popup = ~content)%>%
