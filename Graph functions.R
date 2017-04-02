@@ -27,6 +27,7 @@ legendname<-c("Assult",
               "Firearms and Other Dangerous Articles",
               "Offenses Against the Family",
               "Sexual Offenses")
+
 pal <- colorFactor(c("red","blue","orange","purple","turquoise","magenta",
                      "gray","green","violet","brown","white","pink"),
                    domain = c("Assult",
@@ -54,7 +55,7 @@ ui <- dashboardPage( dashboardHeader(title = p("Crimes and Offenses in City of P
                                    solidHeader = T, collapsible = T, status = 'primary',
                                    # create a select-input widget for crime type selection
                                    selectizeInput('crimeType', 
-                                               label = "Crime and Offense Types",width = 380,
+                                               label = "Crime and Offense Types",width = 300,
                                                choices = list("Assult",
                                                               "Possessing Controlled Substance",
                                                               "Inchoate Crimes",
@@ -71,17 +72,17 @@ ui <- dashboardPage( dashboardHeader(title = p("Crimes and Offenses in City of P
                                                multiple = T),
                                                  
                                    # create a date-range-input widget
-                                   dateRangeInput('dates', label = "Date Range",width = 380,
+                                   dateRangeInput('dates', label = "Date Range",width = 300,
                                                   start = '2016-01-01', end = '2017-03-31',
                                                   min = "2016-01-01", max = "2017-03-31"
                                    ),
                                    # create a select-input widget for day of week selection
-                                   selectizeInput('day_of_week','Days of Week', width = 380,
+                                   selectizeInput('day_of_week','Days of Week', width = 300,
                                                   choices = c('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
                                                   selected = c('Monday'),
                                                   multiple = T),
                                    # create a slder-input widget for time of day selection
-                                   sliderInput('time_of_day','Time of Day', min = 0, max = 23,width = 380,
+                                   sliderInput('time_of_day','Time of Day', min = 0, max = 23,width = 300,
                                                value = c(0,23), step = 1),
                                    # create a submit-button for user explicitly confirm data input
                                    submitButton(text = "Submit",icon =icon('filter'))
@@ -92,6 +93,7 @@ ui <- dashboardPage( dashboardHeader(title = p("Crimes and Offenses in City of P
                                             leafletOutput('crimeMap',height = 500)))
                       )
                     ))
+
 
 server <- function(input, output) {
   # Create a reactive expression to filter data set per user requests
@@ -113,18 +115,10 @@ server <- function(input, output) {
         color = ~pal(ShortCode),
         stroke = FALSE, fillOpacity = 0.5,
         popup = ~content)%>%
-       observe({
-        proxy <- leafletProxy("map", data = quakes)
-        
-        # Remove any existing legend, and only if the legend is
-        # enabled, create a new one.
-        proxy %>% clearControls()
-        if (input$legend) {
-          pal <- colorpal()
-          proxy %>% addLegend(position = "bottomright",
-                              pal = pal, values = ~mag
+        addLegend(position = "bottomright",
+                              pal = pal,values = legendname
           )
-      )
+      
   })
 }
 
