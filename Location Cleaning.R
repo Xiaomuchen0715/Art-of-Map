@@ -44,6 +44,7 @@ label<-function(frames){
                            "<b>Incident Location:</b>","<br>", 
                            "Adress:", frames$INCIDENTLOCATION,"<br>",
                            "Neighborhood:", frames$INCIDENTNEIGHBORHOOD, "<br>",
+                           "Public Works Division:", frames$PUBLIC_WORKS_DIVISION, "<br>",
                            "<b>Suspect Profile:</b>", "<br",
                            "Race:", frames$RACE, "<br>",
                            "Race:", frames$RACE, "<br>",
