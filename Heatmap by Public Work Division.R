@@ -103,6 +103,17 @@ names(DistricCount)[3]<-"Frequency"
 DistricCount$rnames<-factor(DistricCount$rnames, levels=unique(as.character(DistricCount$rnames)) )
 DistricCount$variable<-factor(DistricCount$variable, levels=unique(as.character(DistricCount$variable)) )
 
+Percentage<-NULL
+for(i in 1:length(DistricCount$Frequency)){
+  print(i)
+  Percentage<-c(Percentage,DistricCount$Frequency[i]/sum(DistricCount$Frequency))
+}
+DistricCount<-cbind(DistricCount,Percentage)
+
+DistricCount$Percentage<-round(DistricCount$Percentage*100, digits = 0)
+DistricCount$Percentage<-ifelse(DistricCount$Percentage>0,paste0(as.character(DistricCount$Percentage),"%"),0)
+
+
 #creat new dataframe for public data
 rnames<- rownames(PublicCount)
 PublicCount<-cbind(rnames,data.frame(PublicCount))
@@ -124,19 +135,20 @@ PublicCount$Percentage<-ifelse(PublicCount$Percentage>0,paste0(as.character(Publ
 #graphy
  heat1<-ggplot(NeighborCount, aes(variable, rnames)) + 
     geom_tile(aes(fill = Frequency), colour = "white") + 
-  scale_fill_viridis()
+  scale_fill_viridis(option = "D")
  
-heat1+scale_x_discrete("", expand = c(0, 0)) + 
+ heat1<-heat1+scale_x_discrete("", expand = c(0, 0)) + 
   scale_y_discrete("", expand = c(0, 0)) + 
   theme_grey(base_size = 9) + 
   theme(legend.position = "right",
         plot.title = element_text(size = 16,colour="gray40",face = "bold"),
         axis.ticks = element_blank(), 
-        axis.text.y = element_text(size=3, hjust = 0),
+        axis.text.y = element_text(size=10, hjust = 0,face = "bold.italic"),
         axis.text.x = element_text(size=5,angle = 350, hjust = 0))+
     ggtitle("Heatmap of Offense by Neighborhood")
 
-  heat1
+  heat1+geom_text(aes(label = Frequency),
+                  size=5,fontface=2,color="orangered1")
 
 heat2<-ggplot(DistricCount, aes(variable, rnames)) + 
   geom_tile(aes(fill = Frequency),colour="white")
@@ -147,12 +159,16 @@ heat2<-heat2+scale_fill_viridis()+
   theme_grey(base_size = 9) + 
   theme(legend.position = "right",
         axis.ticks = element_blank(), 
-        plot.title = element_text(size =20,colour="gray40",face = "bold"),
+        plot.title = element_text(size =26,colour="gray40",face = "bold"),
         axis.text.y = element_text(size=15, hjust = 0,face = "bold.italic"),
-        axis.text.x = element_text(size=8,angle = 335, hjust = 0))+
+        axis.text.x = element_text(size=8,angle = 335, hjust = 0,face = "bold.italic"))+
   ggtitle("Heatmap of Offense by Council District")
+heat2
 heat2+geom_text(aes(label = Frequency),
            size=6,fontface=2,color="darkorange3")
+
+heat2+geom_text(aes(label = Percentage),
+                size=6,fontface=2,color="darkorange3")
 
 heat3<-ggplot(PublicCount, aes(variable, rnames)) + 
   geom_tile(aes(fill = Frequency), colour = "white") + 
@@ -165,11 +181,11 @@ heat3<-heat3+scale_x_discrete("", expand = c(0, 0)) +
         plot.title = element_text(size = 20,colour="gray40",face = "bold"),
         axis.ticks = element_blank(), 
         axis.text.y = element_text(size=13, hjust = 0,face = "bold.italic"),
-        axis.text.x = element_text(size=8,angle = 335, hjust = 0))+
+        axis.text.x = element_text(size=8,angle = 335, hjust = 0,face = "bold.italic"))+
   ggtitle("Heatmap of Offense by Public Works Division")
-
+heat3
 heat3+geom_text(aes(label = Percentage),
-                size=6,fontface=2,color="darkorange3")
+                size=8,fontface=2,color="darkorange3")
 
 heat3+geom_text(aes(label = Frequency),
-                size=6,fontface=2,color="darkorange3")
+                size=8,fontface=2,color="darkorange3")
