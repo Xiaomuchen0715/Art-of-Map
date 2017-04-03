@@ -12,50 +12,6 @@ library(shiny)
 library(lubridate)
 library(shinydashboard)
 library(jsonlite)
-#funtion for label
-label<-function(frames){
-  frames$ShortCode[frames$ShortCode=="27"]<-"Assult"
-  frames$ShortCode[frames$ShortCode=="13(a)"]<-"Possessing Controlled Substance"
-  frames$ShortCode[frames$ShortCode=="9"]<-"Inchoate Crimes"
-  frames$ShortCode[frames$ShortCode=="39"]<-"Theft"
-  frames$ShortCode[frames$ShortCode=="55"]<-"Riot and Related Offenses"
-  frames$ShortCode[frames$ShortCode=="33"]<-"Arson, Criminal Mischef And Other Property Destructions"
-  frames$ShortCode[frames$ShortCode=="35"]<-"Burglary"
-  frames$ShortCode[frames$ShortCode=="49"]<-"Falsification and Intimidation"
-  frames$ShortCode[frames$ShortCode=="37"]<-"Robbery"
-  frames$ShortCode[frames$ShortCode=="61"]<-"Firearms and Other Dangerous Articles"
-  frames$ShortCode[frames$ShortCode=="43"]<-"Offenses Against the Family"
-  frames$ShortCode[frames$ShortCode=="31"]<-"Sexual Offenses"
-  frames$GENDER[frames$GENDER=="F"]<-"Female"
-  frames$GENDER[frames$GENDER=="M"]<-"Male"
-  frames$GENDER[frames$GENDER=="M"]<-"Male"
-  frames$RACE[frames$RACE=="A"]<-"Asian"
-  frames$RACE[frames$RACE=="B"]<-"African America"
-  frames$RACE[frames$RACE=="H"]<-"Hispanic"
-  frames$RACE[frames$RACE=="O"]<-"Other"
-  frames$RACE[frames$RACE=="U"]<-"Unknow"
-  frames$RACE[frames$RACE=="W"]<-"White"
-  frames<-frames%>%
-    mutate(Weekday=wday(frames$ARRESTTIME,label = TRUE, abbr = FALSE))%>%
-    mutate(Hours=hour(frames$ARRESTTIME))%>%
-    mutate(Date=as.Date(frames$ARRESTTIME))%>%
-    mutate(incidentType=as.factor(frames$ShortCode))%>%
-    mutate(content = paste("<b>Type of offense:</b>", "<b><font color=darkyellow>",frames$ShortCode, "</b></font><br>",
-                           "<b>Incident Location:</b>","<br>", 
-                           "Adress:", frames$INCIDENTLOCATION,"<br>",
-                           "Neighborhood:", frames$INCIDENTNEIGHBORHOOD, "<br>",
-                           "Public Works Division:", frames$PUBLIC_WORKS_DIVISION, "<br>",
-                           "<b>Suspect Profile:</b>", "<br",
-                           "Race:", frames$RACE, "<br>",
-                           "Race:", frames$RACE, "<br>",
-                           "Gender:", frames$GENDER, "<br>",
-                           "Arrested at", frames$ARRESTLOCATION, "at",frames$ARRESTTIME))
-  
-  return(frames)
-}
-
-minidata<-label(minidata)
-
 
 #map
 #The color system we use 
@@ -108,7 +64,7 @@ locationClean<-function(emtylocations,x,y){
 
 #However without street number the result from this API function is not accurate
 #we decide to filter location based on the longitude and latitude of pittsburgh
-minidata<-filter(minidata,X>-80.1&X< -79.5&Y<41&Y>40.3)
-plot(minidata$X,minidata$Y)
-
-
+locdata<-filter(minidata,X>-80.1&X< -79.5&Y<41&Y>40.3)
+plot(locdata$X,locdata$Y)
+#Thereore the database is slightly different from what
+#we use for hit map

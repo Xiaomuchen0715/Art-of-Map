@@ -70,6 +70,67 @@ hist(minidata$NeighborCount)
 
 
 
+#add labels to data
+label<-function(frames){
+  frames$ShortCode[frames$ShortCode=="27"]<-"Assult"
+  frames$ShortCode[frames$ShortCode=="13(a)"]<-"Possessing Controlled Substance"
+  frames$ShortCode[frames$ShortCode=="9"]<-"Inchoate Crimes"
+  frames$ShortCode[frames$ShortCode=="39"]<-"Theft"
+  frames$ShortCode[frames$ShortCode=="55"]<-"Riot and Related Offenses"
+  frames$ShortCode[frames$ShortCode=="33"]<-"Arson, Criminal Mischef And Other Property Destructions"
+  frames$ShortCode[frames$ShortCode=="35"]<-"Burglary"
+  frames$ShortCode[frames$ShortCode=="49"]<-"Falsification and Intimidation"
+  frames$ShortCode[frames$ShortCode=="37"]<-"Robbery"
+  frames$ShortCode[frames$ShortCode=="61"]<-"Firearms and Other Dangerous Articles"
+  frames$ShortCode[frames$ShortCode=="43"]<-"Offenses Against the Family"
+  frames$ShortCode[frames$ShortCode=="31"]<-"Sexual Offenses"
+  frames$GENDER[frames$GENDER=="F"]<-"Female"
+  frames$GENDER[frames$GENDER=="M"]<-"Male"
+  frames$GENDER[frames$GENDER=="M"]<-"Male"
+  frames$RACE[frames$RACE=="A"]<-"Asian"
+  frames$RACE[frames$RACE=="B"]<-"African America"
+  frames$RACE[frames$RACE=="H"]<-"Hispanic"
+  frames$RACE[frames$RACE=="O"]<-"Other"
+  frames$RACE[frames$RACE=="U"]<-"Unknow"
+  frames$RACE[frames$RACE=="W"]<-"White"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==2]<-"Division Two"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==1]<-"Division One"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==4]<-"Division Four"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==3]<-"Division Three"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==5]<-"Division Five"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==6]<-"Division Six"
+  frames$PUBLIC_WORKS_DIVISION[frames$PUBLIC_WORKS_DIVISION==0]<-"Zero"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="6"]<-"District Six"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="1"]<-"District One"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="3"]<-"District Three"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="9"]<-"District Nine"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="2"]<-"District Two"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="4"]<-"District Four"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="7"]<-"District Seven"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="5"]<-"District Five"
+  frames$COUNCIL_DISTRICT[frames$COUNCIL_DISTRICT=="8"]<-"District Eight"
+  frames<-frames%>%
+    mutate(Weekday=wday(frames$ARRESTTIME,label = TRUE, abbr = FALSE))%>%
+    mutate(Hours=hour(frames$ARRESTTIME))%>%
+    mutate(Date=as.Date(frames$ARRESTTIME))%>%
+    mutate(incidentType=as.factor(frames$ShortCode))%>%
+    mutate(content = paste("<b>Type of offense:</b>", "<b><font color=darkyellow>",frames$ShortCode, "</b></font><br>",
+                           "<b>Incident Location:</b>","<br>", 
+                           "Adress:", frames$INCIDENTLOCATION,"<br>",
+                           "Neighborhood:", frames$INCIDENTNEIGHBORHOOD, "<br>",
+                           "Public Works Division:", frames$PUBLIC_WORKS_DIVISION, "<br>",
+                           "<b>Suspect Profile:</b>", "<br",
+                           "Race:", frames$RACE, "<br>",
+                           "Race:", frames$RACE, "<br>",
+                           "Gender:", frames$GENDER, "<br>",
+                           "Arrested at", frames$ARRESTLOCATION, "at",frames$ARRESTTIME))
+  
+  return(frames)
+}
+
+minidata<-label(minidata)
+locdata<-label(locdata)
+
 #set the color for different offense type
 legendname<-c("Assult",
                "Possessing Controlled Substance",
@@ -179,7 +240,7 @@ ui <- dashboardPage(header,
 server <- function(input, output) {
   # Create a reactive expression to filter data set per user requests
   filteredData <- reactive({
-      minidata %>%
+    locdata %>%
       filter(ShortCode %in% input$crimeType ) %>%
       filter(Date > input$dates[1] & Date < input$dates[2]) %>%
       filter(Weekday %in% input$day_of_week) %>%
