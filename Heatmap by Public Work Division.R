@@ -134,7 +134,7 @@ PublicCount$Percentage<-ifelse(PublicCount$Percentage>0,paste0(as.character(Publ
 
 #graphy
  heat1<-ggplot(NeighborCount, aes(variable, rnames)) + 
-    geom_tile(aes(fill = Frequency), colour = "white") + 
+    geom_tile(aes(fill = Frequency), colour = "darkturquoise") + 
   scale_fill_viridis(option = "D")
  
  heat1<-heat1+scale_x_discrete("", expand = c(0, 0)) + 
@@ -146,12 +146,12 @@ PublicCount$Percentage<-ifelse(PublicCount$Percentage>0,paste0(as.character(Publ
         axis.text.y = element_text(size=10, hjust = 0,face = "bold.italic"),
         axis.text.x = element_text(size=5,angle = 350, hjust = 0))+
     ggtitle("Heatmap of Offense by Neighborhood")
-
+heat1
   heat1+geom_text(aes(label = Frequency),
                   size=5,fontface=2,color="orangered1")
 
 heat2<-ggplot(DistricCount, aes(variable, rnames)) + 
-  geom_tile(aes(fill = Frequency),colour="white")
+  geom_tile(aes(fill = Frequency),colour="darkturquoise")
 
 heat2<-heat2+scale_fill_viridis()+
   scale_x_discrete("", expand = c(0, 0)) + 
@@ -171,7 +171,7 @@ heat2+geom_text(aes(label = Percentage),
                 size=6,fontface=2,color="darkorange3")
 
 heat3<-ggplot(PublicCount, aes(variable, rnames)) + 
-  geom_tile(aes(fill = Frequency), colour = "white") + 
+  geom_tile(aes(fill = Frequency), colour = "darkturquoise") + 
   scale_fill_viridis()
 
 heat3<-heat3+scale_x_discrete("", expand = c(0, 0)) + 
