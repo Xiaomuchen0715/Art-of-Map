@@ -14,59 +14,59 @@ library(shinydashboard)
 library(jsonlite)
 
 #use ZIP Code to estimate crime rate
-minidata$Zipcode<-sub('.*,\\s*','', minidata$INCIDENTLOCATION)
-table(minidata$Zipcode)
+locdata$Zipcode<-sub('.*,\\s*','', locdata$INCIDENTLOCATION)
+table(locdata$Zipcode)
 
 #17 of the location without exact zipcode
-minidata$INCIDENTLOCATION[minidata$Zipcode=="PA"]
+locdata$INCIDENTLOCATION[locdata$Zipcode=="PA"]
 #I add them by myself
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "800 Block RECTENWALD ST PITTSBURGH, PA"]<-"PA 15210"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$locdata[locdata$INCIDENTLOCATION==
                    "1100 Block N MURTLAND ST PITTSBURGH, PA"]<-"PA 15208"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "E Liberty BL & Centre AV Pittsburgh, PA"]<-"PA 15206"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "200 Block Forbes AV Pittsburgh, PA"]<-"PA 15213"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "Wyndotte ST & Deraud ST Pittsburgh, PA"]<-"PA 15219"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "300 Block Mt Pleasant RD Pittsburgh, PA"]<-"PA 15214"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "2300 Block Noblestown RD Pittsburgh, PA"]<-"PA 15205"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "3800 Block PERRYSVILLE AV PITTSBURGH, PA"]<-"PA 15205"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "Berry ST & Charlton ST Pittsburgh, PA"]<-"PA 15205"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "500 Block GREENFIELD AV PITTSBURGH, PA"]<-"PA 15207"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "Crafton BL & Ridenour AV Pittsburgh, PA"]<-"PA 15205"
-minidata$Zipcode[minidata$INCIDENTLOCATION==
+locdata$Zipcode[locdata$INCIDENTLOCATION==
                    "800 Block Freeport RD Pittsburgh, PA"]<-"PA 15238"
 #check it
 table(minidata$Zipcode)
-minidata<-filter(minidata,!Zipcode=="PA 12508")
-table(minidata$Zipcode)
+locdata<-filter(locdata,!Zipcode=="PA 12508")
+table(locdata$Zipcode)
 
-c<-(tapply(minidata$Zipcode,sort(minidata$Zipcode),length))
-minidata<-minidata[order(minidata$Zipcode),]
+c<-(tapply(locdata$Zipcode,sort(locdata$Zipcode),length))
+locdata<-locdata[order(locdata$Zipcode),]
 a<-NULL
 for(i in c){
   a<-c(a,rep(i,i))
 }
-minidata$ZipCount<-as.numeric(a)
-table(minidata$ZipCount)
+locdata$ZipCount<-as.numeric(a)
+table(locdata$ZipCount)
 
 #use neighborhood to estimate crime rate
-b<-(tapply(minidata$INCIDENTNEIGHBORHOOD,sort(minidata$INCIDENTNEIGHBORHOOD),length))
-minidata<-minidata[order(minidata$INCIDENTNEIGHBORHOOD),]
+b<-(tapply(locdata$INCIDENTNEIGHBORHOOD,sort(locdata$INCIDENTNEIGHBORHOOD),length))
+locdata<-locdata[order(locdata$INCIDENTNEIGHBORHOOD),]
 e<-NULL
 for(i in b){
   e<-c(e,rep(i,i))
 }
-minidata$NeighborCount<-as.numeric(e)
-hist(minidata$NeighborCount)
+locdata$NeighborCount<-as.numeric(e)
+hist(locdata$NeighborCount)
 
 
 

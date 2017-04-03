@@ -11,11 +11,6 @@ install.packages("tidyr")
 library(tidyr)
  
 #function to count
-167/sum(as.vector(table(minidata$COUNCIL_DISTRICT)))
-        
-    length(which(is.na(minidata$COUNCIL_DISTRICT)))
-    
-    
 Freqs <- table(minidata$ShortCode, minidata$INCIDENTNEIGHBORHOOD)
   NeighborCount<- minidata %>% 
   group_by(ShortCode, INCIDENTNEIGHBORHOOD) %>%
@@ -66,6 +61,7 @@ PublicCount$ShortCode<-factor(PublicCount$ShortCode,levels=order2,ordered=TRUE)
   levels(PublicCount$ShortCode)
   levels(DistricCount$ShortCode)
   levels(NeighborCount$ShortCode)
+  
 
 NeighborCount$INCIDENTNEIGHBORHOOD<-factor(NeighborCount$INCIDENTNEIGHBORHOOD,levels=order1,ordered=TRUE)
 DistricCount$COUNCIL_DISTRICT<-factor(DistricCount$COUNCIL_DISTRICT,
@@ -117,7 +113,3 @@ heat_it(PublicCount,
         PublicCount$PUBLIC_WORKS_DIVISION,
         PublicCount$Freq,PublicCount$Percentage,opts=2)
 
-
-sort(table(minidata$ShortCode),decreasing = T)
-length(minidata$ShortCode)
-37/4982
