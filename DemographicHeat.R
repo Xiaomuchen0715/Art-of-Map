@@ -64,21 +64,21 @@ levels(AgeCount$AGE)
 heat_it<-function(frames,x,y,z,q,opts){
   heat<-ggplot(frames, aes(x, y)) + 
     geom_tile(aes(fill = z), colour = "darkturquoise") + 
-    scale_fill_viridis(option ="D")+
+    scale_fill_viridis(option ="C")+
     scale_x_discrete("", expand = c(0, 0)) + 
     scale_y_discrete("", expand = c(0, 0)) + 
     theme_grey(base_size = 9) + 
     theme(legend.position = "right",
           plot.title = element_text(size = 16,colour="gray40",face = "bold"),
           axis.ticks = element_blank(), 
-          axis.text.y = element_text(size=8, hjust = 0,face = "bold.italic"),
-          axis.text.x = element_text(size=8,angle = 330, hjust = 0))
+          axis.text.y = element_text(size=5, hjust = 0,face = "italic"),
+          axis.text.x = element_text(size=10,angle = 330, hjust = 0))
   if(opts==1){
     heat+geom_text(aes(label = z),
                    size=5,fontface=2,color="orangered1")
   }else{
     if(opts==2){heat+geom_text(aes(label = q),
-                               size=0,fontface=0,color="orangered1")
+                               size=5,fontface=2,color="orangered1")
     }
     else{heat}
   }
@@ -87,17 +87,17 @@ heat_it<-function(frames,x,y,z,q,opts){
 heat_it(GenderCount,
         GenderCount$COUNCIL_DISTRICT,
         GenderCount$GENDER,
-        GenderCount$Freq,GenderCount$Percentage,opts=1)
+        GenderCount$Freq,GenderCount$Percentage,opts=0)
 
 heat_it(RaceCount,
         RaceCount$COUNCIL_DISTRICT,
         RaceCount$RACE,
-        RaceCount$Freq,RaceCount$Percentage,opts=2)
+        RaceCount$Freq,RaceCount$Percentage,opts=0)
 
 heat_it(AgeCount,
         AgeCount$COUNCIL_DISTRICT,
         AgeCount$AGE,
-        AgeCount$Freq,AgeCount$Percentage,opts=0)
+        AgeCount$Freq,AgeCount$Percentage,opts=3)
 
 
 

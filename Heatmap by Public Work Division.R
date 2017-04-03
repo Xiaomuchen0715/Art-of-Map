@@ -9,9 +9,13 @@ library(dplyr)
 library(dplyr)
 install.packages("tidyr")
 library(tidyr)
-detach("package:plyr", unload=TRUE) 
+ 
 #function to count
-
+167/sum(as.vector(table(minidata$COUNCIL_DISTRICT)))
+        
+    length(which(is.na(minidata$COUNCIL_DISTRICT)))
+    
+    
 Freqs <- table(minidata$ShortCode, minidata$INCIDENTNEIGHBORHOOD)
   NeighborCount<- minidata %>% 
   group_by(ShortCode, INCIDENTNEIGHBORHOOD) %>%
@@ -44,62 +48,24 @@ PublicCount$Percentage<-countPercent(PublicCount$Freq)
 DistricCount$Percentage<-countPercent(DistricCount$Freq)
 NeighborCount$Percentage<-countPercent(NeighborCount$Freq)
 
-##ADD NAMES FOR 
-PublicCount$PUBLIC_WORKS_DIVISION<-as.character(PublicCount$PUBLIC_WORKS_DIVISION)
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="2"]<-"Division Two"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="1"]<-"Division One"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="4"]<-"Division Four"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="3"]<-"Division Three"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="5"]<-"Division Five"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="6"]<-"Division Six"
-PublicCount$PUBLIC_WORKS_DIVISION[PublicCount$PUBLIC_WORKS_DIVISION=="0"]<-"Zero"
-levels(PublicCount$PUBLIC_WORKS_DIVISION)
-
-DistricCount$COUNCIL_DISTRICT<-as.character(DistricCount$COUNCIL_DISTRICT)
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="6"]<-"District Six"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="1"]<-"District One"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="3"]<-"District Three"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="9"]<-"District Nine"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="2"]<-"District Two"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="4"]<-"District Four"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="7"]<-"District Seven"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="5"]<-"District Five"
-DistricCount$COUNCIL_DISTRICT[DistricCount$COUNCIL_DISTRICT=="8"]<-"District Eight"
-
-
-
-
 #sortdata function
 order1<-names(sort(table(minidata$INCIDENTNEIGHBORHOOD),
            decreasing = T))
 order2<-names(sort(table(minidata$ShortCode),
                    decreasing = T))
-names(sort(table(minidata$COUNCIL_DISTRICT),
+
+order3<-names(sort(table(minidata$COUNCIL_DISTRICT),
+             decreasing = T))
+
+order4<-names(sort(table(minidata$PUBLIC_WORKS_DIVISION),
                    decreasing = T))
-
-order3<-c("District Six","District One",
-          "District Three","District Nine",
-          "District Two","District Four",
-          "District Seven","District Five",
-          "District Eight")
-
-names(sort(table(minidata$PUBLIC_WORKS_DIVISION),
-                   decreasing = T))
-
-order4<-c("Division Two",
-"Division One",
-"Division Four",
-"Division Three",
-"Division Five",
-"Division Six",
-"Zero")
 
 NeighborCount$ShortCode<-factor(NeighborCount$ShortCode,levels=order2,ordered=TRUE)
 DistricCount$ShortCode<-factor(DistricCount$ShortCode,levels=order2,ordered=TRUE)
 PublicCount$ShortCode<-factor(PublicCount$ShortCode,levels=order2,ordered=TRUE)
   levels(PublicCount$ShortCode)
   levels(DistricCount$ShortCode)
-  levels(NeighborCount$ShortCod)
+  levels(NeighborCount$ShortCode)
 
 NeighborCount$INCIDENTNEIGHBORHOOD<-factor(NeighborCount$INCIDENTNEIGHBORHOOD,levels=order1,ordered=TRUE)
 DistricCount$COUNCIL_DISTRICT<-factor(DistricCount$COUNCIL_DISTRICT,
@@ -130,7 +96,7 @@ heat_it<-function(frames,x,y,z,q,opts){
                    size=5,fontface=2,color="orangered1")
   }else{
     if(opts==2){heat+geom_text(aes(label = q),
-                     size=5,fontface=2,color="orangered1")
+                     size=4,fontface=2,color="orangered1")
     }
     else{heat}
   }
@@ -142,12 +108,16 @@ heat_it(NeighborCount,
         NeighborCount$Freq,NeighborCount$Percentage,opts=1)
 
 heat_it(DistricCount,
-        DistricCount$ShortCode,
         DistricCount$COUNCIL_DISTRICT,
-        DistricCount$Freq,DistricCount$Percentage,opts=2)
+        DistricCount$ShortCode,
+        DistricCount$Freq,DistricCount$Percentage,opts=0)
 
 heat_it(PublicCount,
         PublicCount$ShortCode,
         PublicCount$PUBLIC_WORKS_DIVISION,
         PublicCount$Freq,PublicCount$Percentage,opts=2)
 
+
+sort(table(minidata$ShortCode),decreasing = T)
+length(minidata$ShortCode)
+37/4982
