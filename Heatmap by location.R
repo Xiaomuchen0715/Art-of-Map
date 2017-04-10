@@ -27,6 +27,10 @@ PublicCount<- minidata %>%
     summarise(Freq = n())
 
 
+
+
+
+b$mprop<-c
 countPercent<-function(x){
   Percentage<-NULL
   for(i in 1:length(x)){
