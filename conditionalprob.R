@@ -13,6 +13,7 @@ countProp<-function(frames,x,y){
 
 c<-countProp(WeekCount,WeekCount$Freq,
              WeekCount$COUNCIL_DISTRICT)
+c
 c<-countProp(WeekCount,WeekCount$Freq,
              WeekCount$Weekday)
 c
@@ -42,7 +43,7 @@ c<-c(rep(c[1:2],each=6),rep(c[3:4],each=5),rep(c[5:7],each=6),
      rep(c[8],5),rep(c[(9:10)],each=4))
 
 c<-c(rep(c[1:10],each=4))
-
+c
 c<-c(rep(c[1:10],each=7))
 
 c<-c(rep(c[1],4),rep(c[2],6),rep(c[3],7),
