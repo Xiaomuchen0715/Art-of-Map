@@ -1,0 +1,10 @@
+name: crime_map
+title: Crime Map
+account: visiuchen
+server: shinyapps.io
+appId: 169568
+bundleId: 776996
+url: https://visiuchen.shinyapps.io/crime_map/
+when: 1491342091.74834
+asMultiple: FALSE
+asStatic: FALSE
