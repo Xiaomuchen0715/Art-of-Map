@@ -13,7 +13,7 @@ library(lubridate)
 library(shinydashboard)
 library(jsonlite)
 #basic dataset for mapping
-read.csv("ArrestData.csv")
+ArrestData <- read_csv("ArrestData.csv")
 dat<-ArrestData
 locdata<-dat%>%mutate(OFFENSES=strsplit(as.character(OFFENSES),"/"))%>%
   unnest(OFFENSES)
@@ -178,3 +178,4 @@ body <- dashboardBody(
 
 
 shinyApp(ui,server)
+

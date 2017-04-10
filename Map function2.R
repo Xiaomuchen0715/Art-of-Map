@@ -7,7 +7,7 @@ library(shiny)
 library(lubridate)
 library(shinydashboard)
 library(jsonlite)
-read.csv("ArrestData.csv")
+ArrestData <- read_csv("ArrestData.csv")
 dat<-ArrestData
 locdata<-filter(dat,X>-80.1&X< -79.5&Y<41&Y>40.3)#only 15411 samples in our dataset
 locdata<-arrange(locdata,INCIDENTNEIGHBORHOOD)
