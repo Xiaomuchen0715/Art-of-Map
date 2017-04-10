@@ -178,7 +178,3 @@ body <- dashboardBody(
 
 
 shinyApp(ui,server)
-
-
-
-names(providers)
