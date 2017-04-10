@@ -1,25 +1,13 @@
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-#import data as dat
+library(tidyr)
+#Reashape the data for weekdays and council district
 dat<-ArrestData
-#check if anything wired about this dataset 
-table(year(dat$ARRESTTIME))
-#2014 2015 2016 2017 
-#3    3 4141 2726 
-#The frequencies of 2014 and 2015 is too small 
+dat<-filter(dat,weekdays(ARRESTTIME)>0&COUNCIL_DISTRICT>0)
+nrow(WkCouncildat)
 
-table(dat$AGE)
-#0  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31  32 
-#7  18  23  34  57  58  89 127 117 172 183 227 223 292 243 283 288 267 231 213 222 278 210 171 
-#33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56 
-#176 181 172 169 138 111 100 102 108  88  92  75  82  86  79  77  75  68  81 108  90  77  49  45 
-#57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  79  80  82 
-#78  39  33  35  29  26  26   7   3   6   7  10  15   9   4   1   1   2   2   2   1   1   1   2 
-#88 117 999 
-#1   1   1 
-#7 criminals are under 1 years old, 1 criminal is 99 years old.
-#Therefore, we also decide to get rid of these  datas whith these characters. 
+
 
 #filt the dataframe and get the first type of offense
 easierdat<-function(x,frame){

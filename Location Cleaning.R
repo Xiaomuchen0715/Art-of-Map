@@ -64,7 +64,7 @@ locationClean<-function(emtylocations,x,y){
 
 #However without street number the result from this API function is not accurate
 #we decide to filter location based on the longitude and latitude of pittsburgh
-locdata<-filter(minidata,X>-80.1&X< -79.5&Y<41&Y>40.3)
-plot(locdata$X,locdata$Y)
+dat<-filter(dat,X>-80.1&X< -79.5&Y<41&Y>40.3)
+plot(dat$X,dat$Y)
 #Thereore the database is slightly different from what
 #we use for hit map

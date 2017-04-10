@@ -1,0 +1,52 @@
+load("/Users/jackiechen/Desktop/R/Data/MapGroupFunction/locdata.rds")
+Freqs <- table(minidata$GENDER, minidata$COUNCIL_DISTRICT)#
+GenderCount<- minidata %>% #
+  group_by(GENDER, COUNCIL_DISTRICT) %>%#
+  summarise(Freq = n())#
+#
+Freqs <- table(minidata$RACE, minidata$COUNCIL_DISTRICT)#
+RaceCount<- minidata %>% #
+  group_by(RACE, COUNCIL_DISTRICT) %>%#
+  summarise(Freq = n())#
+#
+Freqs <- table(minidata$AGE, minidata$COUNCIL_DISTRICT)#
+AgeCount<- minidata %>% #
+  group_by(AGE, COUNCIL_DISTRICT) %>%#
+  summarise(Freq = n())#
+#
+countPercent<-function(x){#
+  Percentage<-NULL#
+  for(i in 1:length(x)){#
+    Percentage<-c(Percentage,x[i]/sum(x))#
+    one_00<-round(Percentage*100,digits = 2)#
+    print(sum(one_00))#
+    one_00[one_00<=0]<-0#
+    one_00[one_00>0]<-paste0(one_00,"%")#
+  }#
+  return(one_00)#
+}#
+#
+RaceCount$Percentage<-countPercent(RaceCount$Freq)#
+GenderCount$Percentage<-countPercent(GenderCount$Freq)#
+AgeCount$Percentage<-countPercent(AgeCount$Freq)#
+#
+#sort data #
+order5<-names(sort(table(minidata$GENDER),#
+                   decreasing = T))#
+order6<-names(sort(table(minidata$RACE),#
+                   decreasing = T))#
+order7<-names(sort(table(minidata$AGE),#
+                   decreasing = T))#
+#
+RaceCount$COUNCIL_DISTRICT<-factor(RaceCount$COUNCIL_DISTRICT,levels=order3,ordered=TRUE)#
+GenderCount$COUNCIL_DISTRICT<-factor(GenderCount$COUNCIL_DISTRICT,levels=order3,ordered=TRUE)#
+AgeCount$COUNCIL_DISTRICT<-factor(AgeCount$COUNCIL_DISTRICT,levels=order3,ordered=TRUE)#
+#
+levels(AgeCount$COUNCIL_DISTRICT)#
+levels(GenderCount$COUNCIL_DISTRICT)#
+#
+RaceCount$RACE<-factor(RaceCount$RACE,levels=order6,ordered=TRUE)#
+GenderCount$GENDER<-factor(GenderCount$GENDER,levels=order5,ordered=TRUE)#
+AgeCount$AGE<-factor(AgeCount$AGE,levels=order7,ordered=TRUE)#
+levels(AgeCount$AGE)#
+#"999" is so wried
