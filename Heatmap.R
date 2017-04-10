@@ -6,11 +6,12 @@ library(reshape)
 library(viridis)
 
 #Reashape the data for weekdays and council district
-dat<-ArrestData
+dat<-read_csv("ArrestData.csv")
 heatdat<-filter(dat,weekdays(ARRESTTIME)>0&COUNCIL_DISTRICT>0)%>%
   mutate(Weekday=weekdays(ARRESTTIME),Hour=hour(ARRESTTIME))
 
 heatdat$COUNCIL_DISTRICT[heatdat$COUNCIL_DISTRICT==1]<-"District One"
+
 heatdat$COUNCIL_DISTRICT[heatdat$COUNCIL_DISTRICT==2]<-"District Two"
 heatdat$COUNCIL_DISTRICT[heatdat$COUNCIL_DISTRICT==3]<-"District Three"
 heatdat$COUNCIL_DISTRICT[heatdat$COUNCIL_DISTRICT==4]<-"District Four"
@@ -55,24 +56,34 @@ HourCount$COUNCIL_DISTRICT<-factor(HourCount$COUNCIL_DISTRICT,
 
 levels(WeekCount$COUNCIL_DISTRICT)
 levels(HourCount$COUNCIL_DISTRICT)
+
+
+levels(WeekCount$Weekday)
 order2<-names(sort(table(heatdat$Weekday),
                    decreasing = T))
-WeekCount$Weekday<-factor(WeekCount$Weekday,
-                        levels=order2,ordered=TRUE)
-levels(WeekCount$Weekday)
+order4<-c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
 
+WeekCount$Weekday<-factor(WeekCount$Weekday,
+                          levels=order4,ordered=TRUE)
+WeekCount$Weekday<-factor(WeekCount$Weekday,
+                          levels=order2,ordered=TRUE)
+levels(WeekCount$Weekday)
+order5<-c(0:23)
 order3<-names(sort(table(heatdat$Hour),
                    decreasing = T))
 
 HourCount$Hour<-factor(HourCount$Hour,
                           levels=order3,ordered=TRUE)
+
+HourCount$Hour<-factor(HourCount$Hour,
+                       levels=order5,ordered=TRUE)
 levels(HourCount$Hour)
 
 
 heat_it<-function(frames,x,y,z,q,opts){
   heat<-ggplot(frames, aes(x, y)) + 
     geom_tile(aes(fill = z), colour = "white") + 
-    scale_fill_gradient(low = "white", high = "deepskyblue3")+
+    scale_fill_gradient(low = "white", high = "#0053a9")+
     scale_x_discrete("", expand = c(0, 0)) + 
     scale_y_discrete("", expand = c(0, 0)) + 
     theme_grey(base_size = 9) + 
@@ -117,9 +128,10 @@ countProp<-function(frames,x,y){
 
 c<-countProp(WeekCount,WeekCount$Freq,
              WeekCount$COUNCIL_DISTRICT)
+c
 c<-countProp(WeekCount,WeekCount$Freq,
              WeekCount$Weekday)
-
+c
 c<-countProp(HourCount,HourCount$Freq,
              HourCount$Hour)
 c
@@ -135,7 +147,7 @@ c<-c(rep(c[1:9],each=7))
 c<-c(rep(c[1:7],each=9))
 c<-c(rep(c[1:20],each=9),rep(c[21],8),rep(c[22],9),
      rep(c[23:24],each=8))
-
+c<-c(rep(c[1:4],each=9),rep(c[5:7],each=8),rep(c[8:24],each=9))
 
 minicountProp<-function(frames,x,y){
   percentage<-NULL
@@ -155,14 +167,14 @@ b$h<-paste0(round(b$z*100),"%")
 
 heat<-ggplot(b, aes(b$COUNCIL_DISTRICT,b$Hour )) + 
   geom_tile(aes(fill = b$z), colour = "white") + 
-  scale_fill_gradient(low = "white", high = "deepskyblue3")+
+  scale_fill_gradient(low = "white", high = "#0053a9")+
   scale_x_discrete("", expand = c(0, 0)) + 
   scale_y_discrete("", expand = c(0, 0)) + 
   theme_grey(base_size = 9) + 
   theme(legend.position = "right",
-        plot.title = element_text(size = 16,colour="gray40",face = "bold"),
+        plot.title = element_text(size = 12,colour="gray40",face = "bold"),
         axis.ticks = element_blank(), 
-        axis.text.y = element_text(size=14, hjust = 0,face = "bold.italic"),
+        axis.text.y = element_text(size=14,face = "bold.italic"),
         axis.text.x = element_text(size=14,angle = 330, hjust = 0))
 
 heat+geom_text(aes(label = b$h),
